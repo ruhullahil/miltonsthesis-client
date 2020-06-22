@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>friends</title>
+    <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+
+</head>
+<body>
+  {%for user in friend_list%}
+    <li class="w3-bar">
+        <a href="/chat/{{user.id}}" class="">
+        <img src="test.png" class="w3-bar-item w3-circle" style="width:85px">
+        <div class="w3-bar-item">
+          <span class="w3-large">{{user.name}}</span><br>
+          <span>{{user.email}}</span>
+        </div>
+        </a>
+      </li>
+      {%endfor%}
+
+      
+    
+</body>
+</html>
