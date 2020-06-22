@@ -8,32 +8,17 @@
 
 </head>
 <body>
+  {%for user in friend_list%}
     <li class="w3-bar">
-        <a href="#" class="">
+        <a href="/chat/{{user.id}}" class="">
         <img src="test.png" class="w3-bar-item w3-circle" style="width:85px">
         <div class="w3-bar-item">
-          <span class="w3-large">Mike</span><br>
-          <span>Web Designer</span>
+          <span class="w3-large">{{user.name}}</span><br>
+          <span>{{user.email}}</span>
         </div>
         </a>
       </li>
-      <li class="w3-bar">
-        <a href="#" class="">
-        <img src="test.png" class="w3-bar-item w3-circle" style="width:85px">
-        <div class="w3-bar-item">
-          <span class="w3-large">Mike</span><br>
-          <span>Web Designer</span>
-        </div>
-        </a>
-      </li><li class="w3-bar">
-        <a href="#" class="">
-        <img src="test.png" class="w3-bar-item w3-circle" style="width:85px">
-        <div class="w3-bar-item">
-          <span class="w3-large">Mike</span><br>
-          <span>Web Designer</span>
-        </div>
-        </a>
-      </li>
+      {%endfor%}
 
       
     

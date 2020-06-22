@@ -94,14 +94,27 @@ def token_distroyer(token):
                 return True
         return False
 def token_to_userid(token):
-        token = Tokenlist.query.filter_by(token=token).first()
-        return token.user_id
-def friendid_to_friend(friends_id):
-        friends =[]
-        for friend in friends_id:
-                user= User.query.filter_by(id=friend.Friends)
-                friends.append(user)
+        Token = Tokenlist.query.filter_by(token=token).first()
+        return Token.user_id
+
+def get_friend_list(id):
+        fri = User.query.all()
+        friends=[]
+        for friend in fri:
+                if friend.id ==id:
+                        continue
+                friends.append(friend)
         return friends
+def distroy_token_byid(id):
+        token = Tokenlist.query.filter_by(user_id=id).first()
+        if token != None :
+                db.session.delete(token)
+                db.session.commit()
+                return True
+        return False
+        
+
+
         
 
 
@@ -130,6 +143,7 @@ def user_login_post():
         for single in users:
                 if single.password==userpassword:
                         responce = make_response(redirect('/friends'))
+                        distroy_token_byid(single.id)
                         token = token_grnerator(single)
                         responce.set_cookie('token',token)
                         return responce
@@ -141,12 +155,28 @@ def friends():
         token = request.cookies.get('token')
         if token_validator(token):
                 id = token_to_userid(token)
-                users_friends = Friends.query.filter_by(user_id=id)
-                friend_list = friendid_to_friend(users_friends)
+                #users_friends = Friends.query.filter_by(user_id=id)
+                #friend_list = friendid_to_friend(users_friends)
+                friend_list= get_friend_list(id)
+
                 return render_template('friend.html',friend_list =friend_list)
 
         else :
-                return("not log in ")
+                return redirect('/')
+
+@app.route('/chat/<id>')
+def chat(id):
+        token = request.cookies.get('token')
+        if token_validator(token):
+                users = User.query.filter_by(id = id).first()
+                return render_template('chat.html',users=users)
+        else :
+                return redirect('/')
+
+        
+        
+
+
 @app.route('/logout')
 def logout_get():
         token = request.cookies.get('token')
