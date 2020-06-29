@@ -10,6 +10,7 @@ flask-socketio = "*"
 flask-session = "*"
 loginmanager = "*"
 flask-sqlalchemy = "*"
+flask-cors = "*"
 
 [requires]
 python_version = "3.5"

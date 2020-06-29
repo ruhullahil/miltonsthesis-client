@@ -2,16 +2,19 @@ import os,hashlib
 from flask import Flask, render_template,session,redirect,request,make_response
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy.orm import sessionmaker, relationship
+from flask_cors import CORS
 
 
 tem_path=  os.path.dirname(os.path.dirname(os.path.abspath(os.path.dirname(__file__))))
 tem_path = os.path.join(tem_path,'milton')
 tem_path = os.path.join(tem_path,'client')
-tem_path =os.path.join(tem_path,'temptates')
+tem_path =os.path.join(tem_path,'templates')
 print(tem_path)
 
 
 app = Flask(__name__,template_folder = tem_path,static_folder= tem_path)
+CORS(app)
+cors = CORS(app,resources={r"/*":{"origins":"*"}})
 app.config['SECRET_KEY'] = 'secret!2'
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///efile.db'
 db = SQLAlchemy(app)
@@ -146,6 +149,7 @@ def user_login_post():
                         distroy_token_byid(single.id)
                         token = token_grnerator(single)
                         responce.set_cookie('token',token)
+                        responce.set_cookie('id',str(single.id).encode('ascii'))
                         return responce
         return redirect('/')
 

@@ -1,15 +1,21 @@
-const socket = io()
-let name;
+//const socket = io()
+
+let name
 let textarea = document.querySelector('#textarea')
 let messageArea = document.querySelector('.message__area')
-do {
-    name = prompt('Please enter your name: ')
-} while(!name)
 
+let sendbtn=document.getElementById("send")
+
+/*
 textarea.addEventListener('keyup', (e) => {
-    if(e.key === 'Enter') {
+    if(e.keyCode === 13) {
         sendMessage(e.target.value)
+        console.log('work')
     }
+})
+*/
+sendbtn.addEventListener((e)=>{
+    cons
 })
 
 function sendMessage(message) {
@@ -23,7 +29,7 @@ function sendMessage(message) {
     scrollToBottom()
 
     // Send to server 
-    socket.emit('message', msg)
+   // socket.emit('message', msg)
 
 }
 
@@ -41,10 +47,12 @@ function appendMessage(msg, type) {
 }
 
 // Recieve messages 
+/*
 socket.on('message', (msg) => {
     appendMessage(msg, 'incoming')
     scrollToBottom()
 })
+*/
 
 function scrollToBottom() {
     messageArea.scrollTop = messageArea.scrollHeight
