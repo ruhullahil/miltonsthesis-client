@@ -1,3 +1,4 @@
+import hashlib
 from flask import Flask, render_template,session,redirect,request
 from flask_socketio import SocketIO,Namespace,emit,join_room,leave_room,close_room,rooms,disconnect
 from threading import Lock
@@ -19,8 +20,9 @@ Block_chain = Blockchain()
 
 
 def background_thread():
-
     pass
+
+    
 '''
 @app.route('/')
 @app.route('/test')
@@ -48,7 +50,8 @@ def collect_chain(sumitted_block):
           
 
 def dic_block(message):
-    return Block(message['data'],message['timestamp'],message['previous_hash'],message['sender'],message['reciver'])
+    data = hashlib.sha224(message['data'].encode('ascii')).hexdigest()
+    return Block(data,message['timestamp'],message['previous_hash'],message['sender'],message['reciver'])
 
 
 
@@ -63,6 +66,7 @@ def test_connect():
     emit('my_response', {'data': 'Connected'})
     '''
 
+
 @io.on('my_ping', namespace='/test')
 def ping_pong():
     emit('my_pong')
@@ -71,20 +75,31 @@ def ping_pong():
 @io.on('disconnect', namespace='/test')
 def test_disconnect():
     print('Client disconnected', request.sid)
+    #{k:v for k, v in user_info if v!=request.sid}
 
-@io.on('user_name',namespace='/test')
-def user_name(user):
-    user_info[user]=request.sid
 
-@io.on('private_message',namespace='test')
+@io.on('user_id',namespace='/test')
+def user_id(user):
+    usr= str(user['data'])
+    print('________________________user:',usr)
+    user_info[usr]=request.sid
+    emit('just')
+
+@io.on('private_message',namespace='/test')
 def private_message(message):
-    
+    usr = message['reciver']
+    print('------user id -------',usr)
+    emit('private_message',message,room=user_info[usr])
+    '''
+    emit('send_lastblock')
     block = dic_block(message)
+    print("work")
     if collect_chain(block):
        res = Block_chain.add_block(block)
        usr= block.reciver
        emit('add_in_blockchain',{'block':block},broadcast=True)
        emit('private_message',message,room=user_info[usr])
+    '''
 
         
        
@@ -122,4 +137,4 @@ def private_message(message):
 
 
 if __name__ == '__main__':
-    io.run(app)
+    io.run(app,debug =True)
