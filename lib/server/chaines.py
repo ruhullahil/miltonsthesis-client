@@ -19,6 +19,8 @@ class Block:
         """
         block_string = json.dumps(self.__dict__, sort_keys=True)
         return sha256(block_string.encode()).hexdigest()
+    def __str__(self):
+        return json.dumps(self.__dict__, sort_keys=True)
     
 class  Blockchain:
         # difficulty of our PoW algorithm
@@ -50,13 +52,18 @@ class  Blockchain:
         * Checking if the proof is valid.
         * The previous_hash referred in the block and the hash of latest block
           in the chain match.
-        """
-        previous_hash = self.last_block.hash
+          """
+        
+        previous_hash = self.last_block.compute_hash()
+        print("check hash--------  {} \n : {} ".format(previous_hash,block.previous_hash))
 
         if previous_hash != block.previous_hash:
+
             return False
+        
 
         if not self.is_valid_proof(block, proof):
+            print("-----------valid proof of work ____")
             return False
 
         block.hash = proof
@@ -82,8 +89,9 @@ class  Blockchain:
         while not computed_hash.startswith('0' * Blockchain.difficulty):
             block.nonce += 1
             computed_hash = block.compute_hash()
+        print(block)
 
-        return computed_hash
+        return computed_hash,block
     
     def check_chain_validity(self, chain,validiy_block):
         """

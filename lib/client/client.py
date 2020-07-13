@@ -6,7 +6,8 @@ from flask_cors import CORS
 
 
 tem_path=  os.path.dirname(os.path.dirname(os.path.abspath(os.path.dirname(__file__))))
-tem_path = os.path.join(tem_path,'milton')
+tem_path = os.path.join(tem_path,'lib')
+#tem_path = os.path.join(tem_path,'milton')
 tem_path = os.path.join(tem_path,'client')
 tem_path =os.path.join(tem_path,'templates')
 print(tem_path)
